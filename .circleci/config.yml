@@ -1,29 +1,42 @@
-# Orb 'circleci/hello-build@0.0.5' resolved to 'circleci/hello-build@0.0.5'
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
 version: 2
 jobs:
-  hello/hello-build:
+  build:
     docker:
-    - image: circleci/buildpack-deps:curl-browsers
+    # Use the same Docker base as the project
+    - image: python:3.7.3-stretch
+    working_directory: ~/repo
+
     steps:
+    - checkout
+
+    # Download and cache dependencies
+    - restore_cache:
+    keys:
+    - v1-dependencies-{{ checksum "requirements.txt" }}
+    # fallback to using the latest cache if no exact match is found
+    - v1-dependencies-
+
     - run:
-        command: echo "Hello ${CIRCLE_USERNAME}"
+        name: install dependencies
+        command: |
+          python3 -m venv venv
+          . venv/bin/activate
+          make install
+          # Install hadolint
+          wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
+          chmod +x /bin/hadolint
+    - save_cache:
+      paths:
+      - ./venv
+      key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      # run lint!
     - run:
-        command: |-
-          echo "TRIGGERER: ${CIRCLE_USERNAME}"
-          echo "BUILD_NUMBER: ${CIRCLE_BUILD_NUM}"
-          echo "BUILD_URL: ${CIRCLE_BUILD_URL}"
-          echo "BRANCH: ${CIRCLE_BRANCH}"
-          echo "RUNNING JOB: ${CIRCLE_JOB}"
-          echo "JOB PARALLELISM: ${CIRCLE_NODE_TOTAL}"
-          echo "CIRCLE_REPOSITORY_URL: ${CIRCLE_REPOSITORY_URL}"
-        name: Show some of the CircleCI runtime env vars
-    - run:
-        command: |-
-          echo "uname:" $(uname -a)
-          echo "arch: " $(arch)
-        name: Show system information
-workflows: 
-  Hello Workflow:
-    jobs:
-    - hello/hello-build
-  version: 2
+        name: run lint
+        command: |
+          . venv/bin/activate
+          make lint 
