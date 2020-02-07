@@ -21,8 +21,21 @@ You have 3 options to run this project:
 2. Run in Docker:  `./run_docker.sh`
 3. Run in Kubernetes:  `./run_kubernetes.sh`
 
+NOTE: make sure to update the `dockerpath` to your account docker path
+
 Running this will set up the app running on the port provided by the scripts (5001).
 
 In order to run the option 2 you need to install docker in your local machine. You can find more information about docker installation [here](https://docs.docker.com/install/)
 
 For the option 3, a local kubernetes configuration is required. You can find more information about kubernetes installation [here](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+
+# Files description
+
+- app.py: contains the application logic, spins up a flask web server that handles the http request to our ML algorithm
+- DockerFile: detailed instruction so that docker can build an enviroment to run `app.py`
+- make_prediction.sh: a shell script that makes a curl call to our running web server
+- Makefile: contains automations for our shell scrips and commands
+- README.md: You are reading it!
+- requirements.txt: describe the necessary python modules to intall in our python environment
+- run_docker.sh: build and run the project in a docker container
+- run_kubernetes.sh: spins a kubernete pod from the docker image defined in `dockerpath`
