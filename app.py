@@ -55,19 +55,19 @@ def predict():
     
     # Logging the input payload
     try:
-      json_payload = request.json
-      LOG.info(f"JSON payload: \n{json_payload}")
-      inference_payload = pd.DataFrame(json_payload)
-      LOG.info(f"Inference payload DataFrame: \n{inference_payload}")
-      # scale the input
-      scaled_payload = scale(inference_payload)
-      # get an output prediction from the pretrained model, clf
-      prediction = list(clf.predict(scaled_payload))
-      LOG.info(f"Prediction value: \n{prediction}")
-      return jsonify({'prediction': prediction})
-    except:
-      LOG.info("There was an error on the prediction")
-      return(jsonify({'error'}))
+        json_payload = request.json
+        LOG.info(f"JSON payload: \n{json_payload}")
+        inference_payload = pd.DataFrame(json_payload)
+        LOG.info(f"Inference payload DataFrame: \n{inference_payload}")
+        # scale the input
+        scaled_payload = scale(inference_payload)
+        # get an output prediction from the pretrained model, clf
+        prediction = list(clf.predict(scaled_payload))
+        LOG.info(f"Prediction value: \n{prediction}")
+        return jsonify({'prediction': prediction})
+    except Exception as e:
+        LOG.info("There was an error on the prediction")
+        return(jsonify({'error': e}))
 
 if __name__ == "__main__":
     # load pretrained model as clf
