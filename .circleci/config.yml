@@ -1,0 +1,29 @@
+# Orb 'circleci/hello-build@0.0.5' resolved to 'circleci/hello-build@0.0.5'
+version: 2
+jobs:
+  hello/hello-build:
+    docker:
+    - image: circleci/buildpack-deps:curl-browsers
+    steps:
+    - run:
+        command: echo "Hello ${CIRCLE_USERNAME}"
+    - run:
+        command: |-
+          echo "TRIGGERER: ${CIRCLE_USERNAME}"
+          echo "BUILD_NUMBER: ${CIRCLE_BUILD_NUM}"
+          echo "BUILD_URL: ${CIRCLE_BUILD_URL}"
+          echo "BRANCH: ${CIRCLE_BRANCH}"
+          echo "RUNNING JOB: ${CIRCLE_JOB}"
+          echo "JOB PARALLELISM: ${CIRCLE_NODE_TOTAL}"
+          echo "CIRCLE_REPOSITORY_URL: ${CIRCLE_REPOSITORY_URL}"
+        name: Show some of the CircleCI runtime env vars
+    - run:
+        command: |-
+          echo "uname:" $(uname -a)
+          echo "arch: " $(arch)
+        name: Show system information
+workflows: 
+  Hello Workflow:
+    jobs:
+    - hello/hello-build
+  version: 2
