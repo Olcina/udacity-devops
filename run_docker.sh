@@ -4,7 +4,7 @@
 
 # Step 1:
 # Build image and add a descriptive tag
-docker build --tag=sounditi/prediction-api .
+docker build --tag=prediction-api .
 
 # Step 2: 
 # List docker images
